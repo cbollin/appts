@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <a href="{% url 'appts:logout' %}">Logout</a>
+    <h2>Welcome {{request.session.first_name}}</h2>
+    <h4>Here are your appointments for today, {{date}}</h4>
+    <table>
+        <tr>
+            <th>Task</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        {% for appt in my_today_appt %}
+        <tr>
+            <td>{{appt.my_task}}</td>
+            <td>{{appt.my_time}}</td>
+            <td>{{appt.my_status}}</td>
+            {% if appt.my_status == "Pending" or appt.my_status == "Missed" %}
+            <td><a href="{% url 'appts:edit' appt_id=appt.id %}">Edit</a><a href="{% url 'appts:delete' appt_id=appt.id %}">Delete</a></td>
+            {% else %}
+            <td></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+    <h4>Your upcoming appointments</h4>
+    <table>
+        <tr>
+            <th>Task</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Action</th>
+        </tr>
+        {% for appt in my_future_appt %}
+        <tr>
+            <td>{{appt.my_task}}</td>
+            <td>{{appt.my_date}}</td>
+            <td>{{appt.my_time}}</td>
+            <td>{{appt.my_status}}</td>
+            {% if appt.my_status == "Pending" or appt.my_status == "Missed" %}
+              <td><a href="{% url 'appts:edit' appt_id=appt.id %}">Edit</a><a href="{% url 'appts:delete' appt_id=appt.id %}">Delete</a></td>
+            {% else %}
+            <td></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+    <h4>Add Appointment</h4> {% if messages %} {% for message in messages %}
+    <i><p{% if message.tags %} class="{{message.tags}}"{% endif %}>{{ message }}</p></i> {% endfor %} {% endif %}
+    <form action="{% url 'appts:add' %}" method="post">
+        {% csrf_token %} Date:
+        <input type="date" name="date"> Time:
+        <input type="time" name="time"> Task:
+        <input type="text" name="task">
+        <input type="submit" value="Add Appointment">
+    </form>
+</body>
+
+</html>

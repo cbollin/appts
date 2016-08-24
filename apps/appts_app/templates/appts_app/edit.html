@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <title>Document</title>
+</head>
+<body>
+  <a href="{% url 'appts:logout' %}">Logout</a>
+  <a href="{% url 'appts:appts' %}">Home</a>
+  <form action="{% url 'appts:update' appt_id=appt.id %}" method="post">
+    {% csrf_token %}
+    Task: <input type="text" name="task"><br>
+    Status: <select name="status">
+              <option value="Pending">Pending</option>
+              <option value="Missed">Missed</option>
+              <option value="Done">Done</option>
+            </select><br>
+    Date: <input type="date" name="date"><br>
+    Time: <input type="time" name="time"><br>
+    <input type="submit" value="Edit Appointment">
+  </form>
+  {% if messages %}
+    {% for message in messages %}
+      <i><p {% if message.tags%} class='{{ message.tags}}' {% endif %}> {{message }} </p> </i>
+    {% endfor %}
+  {% endif %}
+</body>
+</html>
